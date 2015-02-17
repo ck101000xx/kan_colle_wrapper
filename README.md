@@ -1,19 +1,9 @@
-# kcv
+# kan_colle_wrapper
 
-A library for Dart developers. It is awesome.
-
-## Usage
-
-A simple usage example:
-
-    import 'package:kcv/kcv.dart';
-
-    main() {
-      var awesome = new Awesome();
-    }
+A [KanColleWrapper][KanColleWrapper] clone written in Dart.
 
 ## Features and bugs
 
-Please file feature requests and bugs at the [issue tracker][tracker].
+Please file feature requests and bugs at the issue tracker.
 
-[tracker]: http://example.com/issues/replaceme
+[KanColleWrapper]:https://github.com/Grabacr07/KanColleViewer/tree/master/Grabacr07.KanColleWrapper
