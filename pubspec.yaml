@@ -1,0 +1,13 @@
+name: kan_colle_wrapper
+version: 0.0.1
+description: A library useful for applications or for sharing on pub.dartlang.org.
+dependencies:
+  chrome: any
+  crypto: any
+  observe: any
+  collection: any
+transformers:
+- observe
+- chrome
+- $dart2js:
+    csp: true
