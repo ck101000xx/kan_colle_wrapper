@@ -1,10 +1,11 @@
 library kan_colle_wrapper.proxy;
-
 import "dart:async";
 import "package:crypto/crypto.dart";
 import "package:chrome/chrome_ext.dart" as chrome;
-
 import "session.dart";
+
+export "session.dart";
+export "kan_colle_proxy_extensions.dart";
 
 class KanColleProxy {
   Stream<Session> _sessionSource;
