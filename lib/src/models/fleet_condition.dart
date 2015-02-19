@@ -10,6 +10,7 @@ class FleetCondition extends TimerNotifier {
 	@reflectable get rejuvenateTime => _rejuvenateTime;
 	@reflectable set rejuvenateTime(value) {
 	  var tmp = isRejuvenating;
+    _notificated = false;
 	  notifyPropertyChange(#rejuvenateTime, _rejuvenateTime, value);
     notifyPropertyChange(#isRejuvenating, tmp, isRejuvenating);
 	}
@@ -43,13 +44,13 @@ class FleetCondition extends TimerNotifier {
 
 			var rejuvnate = new DateTime.now(); // 回復完了予測時刻
 
-			while (condition < KanColleClient.Current.Settings.ReSortieCondition) {
+			while (condition < KanColleClient.current.settings.reSortieCondition) {
 			  rejuvnate = rejuvnate.add(new Duration(minutes: 3));
 				condition += 3;
 				if (condition > 49) condition = 49;
 			}
 
-			rejuvenateTime = rejuvnate <= new DateTime.now()
+			rejuvenateTime = rejuvnate.compareTo(new DateTime.now()) <= 0
 				? null
 				: rejuvnate;
 		}

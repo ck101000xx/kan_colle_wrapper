@@ -1,50 +1,44 @@
 part of kan_colle_wrapper.models;
-
+_get0 (list, index) {
+  var result;
+  result = get(list, index);
+  if (result == null) return 0;
+  return result;
+}
 class ShipInfo extends RawDataWrapper implements IIdentifiable {
-  int _id;
-  @reflectable get id => _id;
+  int get id => rawData["api_id"];
 
-  int _sortId;
-  @reflectable get sortId => _sortId;
+  int get sortId => rawData["api_sortno"];
 
-  String _name;
-  @reflectable get name => _name;
+  String get name => rawData["api_name"];
 
-  int _maxFirepower;
-  @reflectable get maxFirepower => _maxFirepower;
+  int get maxFirepower => _get0(rawData["api_houg"], 1);
 
-  int _maxArmer;
-  @reflectable get maxArmer => _maxArmer;
+  int get maxArmer => _get0(rawData["api_souk"], 1);
 
-  int _maxTorpedo;
-  @reflectable get maxTorpedo => _maxTorpedo;
+  int get maxTorpedo => _get0(rawData["api_raig"], 1);
 
-  int _maxAA;
-  @reflectable get maxAA => _maxAA;
+  int get maxAA => _get0(rawData["api_tyku"], 1);
 
-  int _hp;
-  @reflectable get hp => _hp;
+  int get hp => _get0(rawData["api_taik"], 0);
 
-  int _maxEvasion;
-  @reflectable get maxEvasion => _maxEvasion;
+  int get maxEvasion => _get0(rawData["api_kaih"], 1);
 
-  int _maxASW;
-  @reflectable get maxASW => _maxASW;
+  int get maxASW => _get0(rawData["api_tais"], 1);
 
-  int _maxLOS;
-  @reflectable get maxLOS => _maxLOS;
+  int get maxLOS => _get0(rawData["api_saku"], 1);
 
-  Speed _speed;
-  @reflectable get speed => _speed;
+  int get speed => rawData["api_soku"];
 
-  int _nextRemodelingLevel;
-  @reflectable get nextRemodelingLevel => _nextRemodelingLevel;
+  int get nextRemodelingLevel =>
+      rawData["api_afterlv"] == 0 ? null : rawData["api_afterlv"];
 
 
   ShipType _shipType;
-  @reflectable ShipType get shipType {
+  ShipType get shipType {
     if (_shipType != null) return _shipType;
-    if (_shipType = KanColleClient.Current.Master.ShipTypes[rawData["api_stype"]]) return _shipType;
+    if ((_shipType =
+        KanColleClient.current.master.shipTypes[rawData["api_stype"]]) != null) return _shipType;
     return ShipType.dummy;
   }
 
@@ -54,44 +48,9 @@ class ShipInfo extends RawDataWrapper implements IIdentifiable {
     return "ID = ${id}, Name = \"${name}\", ShipType = \"${shipType.name}\"";
   }
 
-  @override
-  _update(rawData) {
-    var get0 = (list, index) {
-      var result;
-      result = get(list, index);
-      if (result == null) return 0;
-      return result;
-    };
-    _id = notifyPropertyChange(#id, _id, rawData["api_id"]);
-
-    _sortId = notifyPropertyChange(#sortId, _sortId, rawData["api_sortno"]);
-
-    _name = notifyPropertyChange(#name, _name, rawData["api_name"]);
-
-    _maxFirepower = notifyPropertyChange(#maxFirepower, _maxFirepower, get0(rawData["api_houg"], 1));
-
-    _maxArmer = notifyPropertyChange(#maxArmer, _maxArmer, get0(rawData["api_souk"], 1));
-
-    _maxTorpedo = notifyPropertyChange(#maxTorpedo, _maxTorpedo, get0(rawData["api_raig"], 1));
-
-    _maxAA = notifyPropertyChange(#maxAA, _maxAA, get0(rawData["api_tyku"],1));
-
-    _hp = notifyPropertyChange(#hp, _hp, get0(rawData["api_taik"], 0));
-
-    _maxEvasion = notifyPropertyChange(#maxEvasion, _maxEvasion, get0(rawData["api_kaih"], 1));
-
-    _maxASW = notifyPropertyChange(#maxASW, _maxASW, get0(rawData["api_tais"], 1));
-
-    _maxLOS = notifyPropertyChange(#maxLOS, _maxLOS, get0(rawData["api_saku"],1));
-
-    _speed = notifyPropertyChange(#speed, _speed, rawData["api_soku"]);
-
-    _nextRemodelingLevel = notifyPropertyChange(#nextRemodelingLevel, _nextRemodelingLevel, rawData["api_afterlv"] == 0 ? null : rawData["api_afterlv"]);
-
-  }
-
   static final ShipInfo dummy = new ShipInfo({
-      "api_id": 0,
-      "api_name": "？？？"});
+    "api_id": 0,
+    "api_name": "？？？"
+  });
 
 }

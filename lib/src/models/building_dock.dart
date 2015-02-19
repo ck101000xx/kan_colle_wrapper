@@ -32,7 +32,7 @@ class BuildingDock extends TimerNotifier implements IIdentifiable {
 		id = rawData["api_id"];
 		state = rawData["api_state"];
 		ship = state == BuildingDockState.building || state == BuildingDockState.completed
-			? KanColleClient.Current.Master.Ships[rawData["api_created_ship_id"]]
+			? KanColleClient.current.master.ships[rawData["api_created_ship_id"]]
 			: null;
 		completeTime = state == BuildingDockState.building
 			? new DateTime.fromMillisecondsSinceEpoch(rawData["api_complete_time"])

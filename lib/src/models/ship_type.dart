@@ -1,27 +1,14 @@
 part of kan_colle_wrapper.models;
 class ShipType extends RawDataWrapper implements IIdentifiable {
-  int _id;
-  @reflectable get id => _id;
-
-  String _name;
-  @reflectable get name => _name;
-
-  int _sortNumber;
-  @reflectable get sortNumber => _sortNumber;
+  int get id => rawData["api_id"];
+  String get name => rawData["api_name"];
+  int get sortNumber => rawData["api_sortno"];
 
   ShipType(rawData) : super(rawData);
 
 	@override
 	String toString() {
 		return "ID = ${id}, Name = \"${name}\"";
-	}
-
-	@override
-	_update(rawData) {
-	  _id = notifyPropertyChange(#id, _id, rawData["api_id"]);
-    _name = notifyPropertyChange(#name, _name, rawData["api_name"]);
-    _sortNumber = notifyPropertyChange(#sortNumber, _sortNumber, rawData["api_sortno"]);
-
 	}
 	static final ShipType dummy = new ShipType({
 		"api_id": 999,

@@ -8,8 +8,8 @@ class CreatedSlotItem extends RawDataWrapper {
 	CreatedSlotItem(rawData) : super(rawData) {
 		try {
 			slotItemInfo = succeed
-				? KanColleClient.Current.Master.SlotItems[rawData["api_slot_item"]["api_slotitem_id"]]
-				: KanColleClient.Current.Master.SlotItems[int.parse(rawData["api_fdata"].split(',')[1])];
+				? KanColleClient.current.master.slotItems[rawData["api_slot_item"]["api_slotitem_id"]]
+				: KanColleClient.current.master.slotItems[int.parse(rawData["api_fdata"].split(',')[1])];
 
 			print("createitem: ${succeed} - ${slotItemInfo.name}");
 		} catch (ex) {

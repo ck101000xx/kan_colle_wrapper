@@ -37,13 +37,11 @@ class RepairingDock extends TimerNotifier implements IIdentifiable {
   StreamController<RepairingCompletedEventArgs> _completedController;
   Stream<RepairingCompletedEventArgs> completed;
 
-
   RepairingDock(this._homeport, rawData) {
     _completedController = new StreamController.broadcast();
     completed = _completedController.stream;
     update(rawData);
   }
-
 
   void update(rawData) {
     id = rawData["api_id"];
@@ -73,7 +71,7 @@ class RepairingDock extends TimerNotifier implements IIdentifiable {
       this.remaining = remaining;
       if (!_notificated &&
           completed != null &&
-          remaining <= new Duration(seconds: KanColleClient.Current.Settings.NotificationShorteningTime)) {
+          remaining <= new Duration(seconds: KanColleClient.current.settings.notificationShorteningTime)) {
         _completedController.add(new RepairingCompletedEventArgs(id, ship));
         _notificated = true;
       }

@@ -1,25 +1,17 @@
 part of kan_colle_wrapper.models;
 
-
 class Expedition extends TimerNotifier implements IIdentifiable {
-  Fleet _fleet;
+  final Fleet _fleet;
   bool _notificated;
 
-  int _id;
-  @reflectable get id => _id;
-  @reflectable set id(value) {
-    _id = notifyPropertyChange(#id, _id, value);
-  }
+  @observable int id;
 
-  Mission _mission;
-  @reflectable get mission => _mission;
-  @reflectable set mission(value) {
-    _mission = notifyPropertyChange(#mission, _mission, value);
-  }
+  @observable Mission mission;
 
 	DateTime _returnTime;
   @reflectable get returnTime => _returnTime;
   @reflectable set returnTime(value) {
+    _notificated = false;
     var tmp = isInExecution;
     _returnTime = notifyPropertyChange(#returnTime, _returnTime, value);
     notifyPropertyChange(#isInExecution, tmp, isInExecution);
@@ -27,11 +19,7 @@ class Expedition extends TimerNotifier implements IIdentifiable {
 
   @reflectable bool get isInExecution => returnTime != null;
 
-	Duration _remaining;
-  @reflectable get remaining => _remaining;
-  @reflectable set remaining(value) {
-    _remaining = notifyPropertyChange(#remaining, _remaining, value);
-  }
+	@observable Duration remaining;
 
   StreamController<ExpeditionReturnedEventArgs> _returnedController;
   Stream<ExpeditionReturnedEventArgs> returned;
@@ -49,7 +37,7 @@ class Expedition extends TimerNotifier implements IIdentifiable {
 			remaining = null;
 		} else {
 			id = rawData[1];
-			mission = KanColleClient.Current.Master.Missions[id];
+			mission = KanColleClient.current.master.missions[id];
 			returnTime = new DateTime.fromMillisecondsSinceEpoch(rawData[2]);
 			updateCore();
 		}
@@ -64,7 +52,7 @@ class Expedition extends TimerNotifier implements IIdentifiable {
 
 			if (!_notificated &&
 			    returned != null &&
-			    remaining <= new Duration(seconds: KanColleClient.Current.Settings.NotificationShorteningTime)) {
+			    remaining <= new Duration(seconds: KanColleClient.current.settings.notificationShorteningTime)) {
 				_returnedController.add(new ExpeditionReturnedEventArgs(_fleet.name));
 				_notificated = true;
 			}

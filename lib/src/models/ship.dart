@@ -2,39 +2,17 @@ part of kan_colle_wrapper.models;
 
 class Ship extends RawDataWrapper implements IIdentifiable {
 	final Homeport _homeport;
-
-	int _id;
-  @reflectable get id => _id;
-
-  int _sortNumber;
-  @reflectable get sortNumber => _sortNumber;
-
-  int _level;
-  @reflectable get level => _level;
-
-  bool _isLocked;
-  @reflectable get isLocked => _isLocked;
-
-  int _exp;
-  @reflectable get exp => _exp;
-
-  int _expForNextLevel;
-  @reflectable get expForNextLevel => _expForNextLevel;
-
-  int _viewRange;
-  @reflectable get viewRange => _viewRange;
-
-  bool _isMaxModernized;
-  @reflectable get isMaxModernized => _isMaxModernized;
-
-  int _condition;
-  @reflectable get condition => _condition;
-
-  ConditionType _conditionType;
-  @reflectable get conditionType => _conditionType;
-
-  int _sallyArea;
-  @reflectable get sallyArea => _sallyArea;
+	int get id => rawData["api_id"];
+  int get sortNumber => rawData["api_sortno"];
+  int get level => rawData["api_lv"];
+  bool get isLocked => rawData["api_locked"] == 1;
+  int get exp => rawData["api_exp"].length > 0 ? rawData["api_exp"][0] : 0;
+  int get expForNextLevel => rawData["api_exp"].length > 1 ? rawData["api_exp"][1] : 0;
+  int get viewRange => rawData["api_sakuteki"].length > 0 ? rawData["api_sakuteki"][0] : 0;
+  bool get isMaxModernized => firepower.isMax && torpedo.isMax && aa.isMax && armer.isMax;
+  int get condition => rawData["api_cond"];
+  ConditionType get conditionType => ConditionTypeHelper.toConditionType(rawData["api_cond"]);
+  int get _sallyArea => rawData["api_sally_area"];
 
 	@observable ShipInfo info;
 
@@ -67,8 +45,8 @@ class Ship extends RawDataWrapper implements IIdentifiable {
 	void update(rawData) {
 		updateRawData(rawData);
 
-		info = KanColleClient.Current.Master.Ships[rawData["api_ship_id"]] != null ?
-		    KanColleClient.Current.Master.Ships[rawData["api_ship_id"]] :
+		info = KanColleClient.current.master.ships[rawData["api_ship_id"]] != null ?
+		    KanColleClient.current.master.ships[rawData["api_ship_id"]] :
 		    ShipInfo.dummy;
 		hp = new LimitedValue(rawData["api_nowhp"], rawData["api_maxhp"], 0);
 		fuel = new LimitedValue(rawData["api_fuel"], info.rawData["api_fuel_max"], 0);
@@ -86,36 +64,6 @@ class Ship extends RawDataWrapper implements IIdentifiable {
 		    .map((id) => _homeport.itemyard.slotItems[id])
 		    .where((x) => x != null).toList();
 		onSlot = rawData["api_onslot"];
-	}
-
-	@override
-	_update(rawData) {
-	  _id = notifyPropertyChange(#id, _id, rawData["api_id"]);
-    _sortNumber = notifyPropertyChange(#sortNumber, _sortNumber, rawData["api_sortno"]);
-    _level = notifyPropertyChange(#level, _level, rawData["api_lv"]);
-    _isLocked = notifyPropertyChange(#isLocked, _isLocked, rawData["api_locked"] == 1);
-    _exp = notifyPropertyChange(
-        #exp,
-        _exp,
-        rawData["api_exp"].length > 0 ? rawData["api_exp"][0] : 0);
-    _expForNextLevel = notifyPropertyChange(
-        #expForNextLevel,
-        _expForNextLevel,
-        rawData["api_exp"].length > 1 ? rawData["api_exp"][1] : 0);
-    _viewRange = notifyPropertyChange(
-        #viewRange,
-        _viewRange,
-        rawData["api_sakuteki"].length > 0 ? rawData["api_sakuteki"][0] : 0);
-    _isMaxModernized = notifyPropertyChange(
-        #isMaxModernized,
-        _isMaxModernized,
-        firepower.isMax && torpedo.isMax && aa.isMax && armer.isMax);
-    _condition = notifyPropertyChange(#condition, _condition, rawData["api_cond"]);
-    _conditionType = notifyPropertyChange(
-        #conditionType,
-        _conditionType,
-        ConditionTypeHelper.toConditionType(rawData["api_cond"]));
-    _sallyArea = notifyPropertyChange(#sallyArea, _sallyArea, rawData["api_sally_area"]);
 	}
 
 	void charge(int fuel, int bull, List<int> onslot) {

@@ -3,7 +3,7 @@ part of kan_colle_wrapper.models;
 class Fleet extends Observable implements IIdentifiable {
 	final Homeport _homeport;
 	bool _isInSortie;
-
+	StreamSubscription _subscription;
 	@observable int id;
 
 	@observable String name;
@@ -18,7 +18,7 @@ class Fleet extends Observable implements IIdentifiable {
 
 	@observable int totalViewRange;
 
-	@observable Speed speed;
+	@observable int speed;
 
 	@observable FleetState state;
 
@@ -34,21 +34,19 @@ class Fleet extends Observable implements IIdentifiable {
 
 	@observable bool isRepairling;
 
-	Fleet(HomePort this._homeport, rawData) {
+	Fleet(Homeport this._homeport, rawData) {
 	  ships = [];
 
 		condition = new FleetCondition(this);
 		expedition = new Expedition(this);
 		update(rawData);
-    /* TODO
-		this.compositeDisposable = new LivetCompositeDisposable
-		{
-			new PropertyChangedWeakEventListener(KanColleClient.Current.Settings)
-			{
-				{ "ViewRangeCalcLogic", (sender, args) => this.Calculate() }
-			}
-		};
-		*/
+    _subscription = KanColleClient.current.settings.changes.listen((records) {
+			records.forEach((record) {
+			  if (record is PropertyChangeRecord && record.name == #viewRangeCalcLogic) {
+          calculate();
+        }
+			});
+    });
 	}
 
 	void update(rawData) {
@@ -84,8 +82,8 @@ class Fleet extends Observable implements IIdentifiable {
 		totalLevel = ships.fold(0, (prev, element) => prev + element);
 		averageLevel = ships.isEmpty ? totalLevel / ships.length : 0.0;
 		airSuperiorityPotential =
-		    ships.fold(0, (prev, element) => prev + element.calcAirSuperiorityPotential());
-		totalViewRange = calcFleetViewRange(KanColleClient.Current.Settings.ViewRangeCalcLogic);
+		    ships.fold(0, (prev, element) => prev + calcAirSuperiorityPotential(element));
+		totalViewRange = calcFleetViewRange(this, KanColleClient.current.settings.viewRangeCalcLogic);
 		speed = ships.every((s) => s.info.speed == Speed.fast) ? Speed.fast : Speed.low;
 	}
 
@@ -142,6 +140,7 @@ class Fleet extends Observable implements IIdentifiable {
 	}
 
 	void dispose() {
+	  _subscription.cancel();
 		safeDispose(expedition);
 		safeDispose(condition);
 	}
