@@ -3,9 +3,12 @@ library kan_colle_wrapper.models;
 import "dart:async";
 import "dart:convert";
 import "package:observe/observe.dart";
+import "caculator.dart";
 import "timer_notifier.dart";
 import "internal/extensions.dart";
+import "homeport.dart";
 import "session.dart";
+import "kan_colle_client.dart";
 
 part "models/admiral.dart";
 part "models/building_completed_event_args.dart";

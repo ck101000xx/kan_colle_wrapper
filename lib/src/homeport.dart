@@ -1,110 +1,67 @@
-class Homeport extends ChangeNotifier {
-  /// <summary>
-  /// 艦隊の編成状況にアクセスできるようにします。
-  /// </summary>
-  public Organization Organization { get; private set; }
+library kan_colle_wrapper.homeport;
 
-  /// <summary>
-  /// 資源および資材の保有状況にアクセスできるようにします。
-  /// </summary>
-  public Materials Materials { get; private set; }
+import "dart:async";
+import "dart:collection";
+import "dart:convert";
+import "package:observe/observe.dart";
+import "internal/extensions.dart";
+import "kan_colle_client.dart";
+import "kan_colle_proxy.dart";
+import "models.dart";
 
-  /// <summary>
-  /// 装備や消費アイテムの保有状況にアクセスできるようにします。
-  /// </summary>
-  public Itemyard Itemyard { get; private set; }
+part "member_table.dart";
+part "dockyard.dart";
+part "itemyard.dart";
+part "logger.dart";
+part "materials.dart";
+part "organization.dart";
+part "quests.dart";
+part "repairyard.dart";
 
-  /// <summary>
-  /// 複数の建造ドックを持つ工廠を取得します。
-  /// </summary>
-  public Dockyard Dockyard { get; private set; }
+class Homeport extends Observable {
+  @observable Organization organization;
+  @observable Materials materials;
+  @observable Itemyard itemyard;
+  @observable Dockyard dockyard;
+  @observable Repairyard repairyard;
+  @observable Quests quests;
+  @observable Logger logger;
+  @observable Admiral admiral;
 
-  /// <summary>
-  /// 複数の入渠ドックを持つ工廠を取得します。
-  /// </summary>
-  public Repairyard Repairyard { get; private set; }
+  Homeport(KanColleProxy proxy) {
+    materials = new Materials(proxy);
+    itemyard = new Itemyard(proxy);
+    organization = new Organization(this, proxy);
+    repairyard = new Repairyard(this, proxy);
+    dockyard = new Dockyard(proxy);
+    quests = new Quests(proxy);
+    logger = new Logger(proxy);
 
-  /// <summary>
-  /// 任務情報を取得します。
-  /// </summary>
-  public Quests Quests { get; private set; }
-
-  /// <summary>
-  /// Logs events such as ship drops, crafts, and item developments.
-  /// </summary>
-  public Logger Logger { get; private set; }
-
-  #region Admiral 変更通知プロパティ
-
-  private Admiral _Admiral;
-
-  /// <summary>
-  /// 現在ログインしている提督を取得します。
-  /// <see cref="INotifyPropertyChanged.PropertyChanged"/> イベントによる変更通知をサポートします。
-  /// </summary>
-  public Admiral Admiral
-  {
-    get { return this._Admiral; }
-    private set
-    {
-      if (this._Admiral != value)
-      {
-        this._Admiral = value;
-        this.RaisePropertyChanged();
-      }
-    }
-  }
-
-  #endregion
-
-
-
-  internal Homeport(KanColleProxy proxy)
-  {
-    this.Materials = new Materials(proxy);
-    this.Itemyard = new Itemyard(proxy);
-    this.Organization = new Organization(this, proxy);
-    this.Repairyard = new Repairyard(this, proxy);
-    this.Dockyard = new Dockyard(proxy);
-    this.Quests = new Quests(proxy);
-    this.Logger = new Logger(proxy);
-
-    proxy.api_port.TryParse<kcsapi_port>().Subscribe(x =>
-    {
-      this.Organization.Update(x.Data.api_ship);
-      this.Repairyard.Update(x.Data.api_ndock);
-      this.Organization.Update(x.Data.api_deck_port);
-      this.Organization.Combined = x.Data.api_combined_flag == 1;
-      this.Materials.Update(x.Data.api_material);
+    tryParse(proxy["api_port"]).listen((x) {
+      organization.updateShips(x.data["api_ship"]);
+      repairyard.update(x.data["api_ndock"]);
+      organization.updateFleets(x.data["api_deck_port"]);
+      organization.combined = x.data["api_combined_flag"] == 1;
+      materials.update(x.data["api_material"]);
     });
-    proxy.api_get_member_basic.TryParse<kcsapi_basic>().Subscribe(x => this.UpdateAdmiral(x.Data));
-    proxy.api_req_member_updatecomment.TryParse().Subscribe(this.UpdateComment);
+    tryParse(proxy["api_get_member_basic"])
+      .listen((x) => updateAdmiral(x.data));
+    tryParse(proxy["api_req_member_updatecomment"]).listen(updateComment);
   }
-
-
-  internal void UpdateAdmiral(kcsapi_basic data)
-  {
-    this.Admiral = new Admiral(data);
+  updateAdmiral(data) {
+    admiral = new Admiral(data);
   }
-
-  private void UpdateComment(SvData data)
-  {
-    if (data == null || !data.IsSuccess) return;
-
-    try
-    {
-      this.Admiral.Comment = data.Request["api_cmt"];
-    }
-    catch (Exception ex)
-    {
-      System.Diagnostics.Debug.WriteLine("艦隊名の変更に失敗しました: {0}", ex);
+  updateComment(SvData data) {
+    if (data == null || !data.isSuccess) return;
+    try {
+      admiral.comment = data.request["api_cmt"];
+    } catch (ex) {
+      print("艦隊名の変更に失敗しました: ${ex}");
     }
   }
 
 
-  internal void StartConditionCount()
-  {
+  void startConditionCount() {
     //Observable.Timer(TimeSpan.FromSeconds(10), TimeSpan.FromMinutes(3))
   }
-
 }
