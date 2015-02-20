@@ -40,14 +40,10 @@ class Fleet extends Observable implements IIdentifiable {
     condition = new FleetCondition(this);
     expedition = new Expedition(this);
     update(rawData);
-    _subscription = KanColleClient.current.settings.changes.listen((records) {
-      records.forEach((record) {
-        if (record is PropertyChangeRecord &&
-            record.name == #viewRangeCalcLogic) {
-          calculate();
-        }
-      });
-    });
+    _subscription = onPropertyChange(
+        KanColleClient.current.settings,
+        #viewRangeCalcLogic,
+        calculate);
   }
 
   void update(rawData) {
