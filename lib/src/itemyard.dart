@@ -23,12 +23,10 @@ class Itemyard extends Observable {
         _slotItemsCount,
         slotItems.length + _droppedItemsCount);
     value.changes.listen((list) {
-      list.forEach((_) {
-        _slotItemsCount = notifyPropertyChange(
-            #slotItemsCount,
-            _slotItemsCount,
-            slotItems.length + _droppedItemsCount);
-      });
+      _slotItemsCount = notifyPropertyChange(
+          #slotItemsCount,
+          _slotItemsCount,
+          slotItems.length + _droppedItemsCount);
     });
   }
   @observable MemberTable<UseItem> useItems;
