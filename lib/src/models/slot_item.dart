@@ -6,11 +6,12 @@ class SlotItem extends RawDataWrapper implements IIdentifiable {
   @observable final SlotItemInfo info;
 
   SlotItem(rawData)
-    : info =
-        KanColleClient.current.master.slotItems[rawData["api_slotitem_id"]] != null ?
-        KanColleClient.current.master.slotItems[rawData["api_slotitem_id"]] :
-        SlotItemInfo.dummy
-    , super(rawData);
+      : info =
+          KanColleClient.current.master.slotItems[rawData["api_slotitem_id"]] !=
+          null ?
+          KanColleClient.current.master.slotItems[rawData["api_slotitem_id"]] :
+          SlotItemInfo.dummy,
+        super(rawData);
 
   @override
   String toString() {

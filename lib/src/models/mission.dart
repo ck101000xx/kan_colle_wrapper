@@ -5,5 +5,5 @@ class Mission extends RawDataWrapper implements IIdentifiable {
   @observable String get title => rawData["api_name"];
   @observable String get detail => rawData["api_details"];
 
-	Mission(mission) : super(mission);
+  Mission(mission) : super(mission);
 }

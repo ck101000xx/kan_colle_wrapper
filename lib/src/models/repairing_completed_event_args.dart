@@ -5,6 +5,5 @@ class RepairingCompletedEventArgs {
   final int dockId;
   final Ship ship;
 
-	RepairingCompletedEventArgs(this.dockId, this.ship);
+  RepairingCompletedEventArgs(this.dockId, this.ship);
 }
-

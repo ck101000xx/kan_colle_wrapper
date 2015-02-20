@@ -10,9 +10,10 @@ class SvData extends RawDataWrapper {
   SvData(rawData, Map<String, String> this.request) : super(rawData);
 
   static Future<SvData> parse(Session session) {
-    return getResponseAsJson(session)
-       .then(JSON.decode)
-       .then((obj) => new SvData(obj, session.request.url.queryParameters));
+    return getResponseAsJson(
+        session).then(
+            JSON.decode).then(
+                (obj) => new SvData(obj, session.request.url.queryParameters));
   }
 
   static Future<SvData> tryParse(Session session) {

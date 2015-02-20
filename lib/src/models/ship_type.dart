@@ -6,12 +6,13 @@ class ShipType extends RawDataWrapper implements IIdentifiable {
 
   ShipType(rawData) : super(rawData);
 
-	@override
-	String toString() {
-		return "ID = ${id}, Name = \"${name}\"";
-	}
-	static final ShipType dummy = new ShipType({
-		"api_id": 999,
-		"api_sortno": 999,
-		"api_name": "不審船"});
+  @override
+  String toString() {
+    return "ID = ${id}, Name = \"${name}\"";
+  }
+  static final ShipType dummy = new ShipType({
+    "api_id": 999,
+    "api_sortno": 999,
+    "api_name": "不審船"
+  });
 }

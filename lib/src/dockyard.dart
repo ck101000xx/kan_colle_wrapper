@@ -8,7 +8,8 @@ class Dockyard extends Observable {
     docks = new MemberTable();
     tryParse(proxy["api_get_member_kdock"]).listen((x) => update(x.data));
     tryParse(proxy["api_req_kousyou_getship"]).listen((x) => getShip(x.data));
-    tryParse(proxy["api_req_kousyou_createship_speedchange"]).listen(changeSpeed);
+    tryParse(
+        proxy["api_req_kousyou_createship_speedchange"]).listen(changeSpeed);
     tryParse(proxy["api_req_kousyou_createitem"]).listen(createSlotItem);
   }
 

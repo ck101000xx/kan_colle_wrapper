@@ -15,10 +15,12 @@ class Repairyard extends Observable {
 
   bool checkRepairing(arg) {
     if (arg is int) {
-      return docks.values.where((x) => x.ship != null).any((x) => x.shipId == arg);
+      return docks.values.where(
+          (x) => x.ship != null).any((x) => x.shipId == arg);
     }
     if (arg is Fleet) {
-      var repairingShipIds = docks.values.where((x) => x.ship != null).map((x) => x.ship.id);
+      var repairingShipIds =
+          docks.values.where((x) => x.ship != null).map((x) => x.ship.id);
       return arg.ships.any((x) => repairingShipIds.any((id) => id == x.id));
     }
   }
@@ -31,14 +33,16 @@ class Repairyard extends Observable {
       }
     } else {
       docks.values.forEach((x) => x.dispose());
-      docks = new MemberTable(source.map((x) => new RepairingDock(_homeport, x)));
+      docks =
+          new MemberTable(source.map((x) => new RepairingDock(_homeport, x)));
     }
   }
 
   void start(SvData data) {
     try {
       //var dock = this.Docks[int.Parse(data.Request["api_ndock_id"])];
-      var ship = _homeport.organization.ships[int.parse(data.request["api_ship_id"])];
+      var ship =
+          _homeport.organization.ships[int.parse(data.request["api_ship_id"])];
       var highspeed = data.request["api_highspeed"] == "1";
       if (highspeed) {
         ship.repair();

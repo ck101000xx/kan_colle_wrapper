@@ -44,8 +44,8 @@ class Homeport extends Observable {
       organization.combined = x.data["api_combined_flag"] == 1;
       materials.update(x.data["api_material"]);
     });
-    tryParse(proxy["api_get_member_basic"])
-      .listen((x) => updateAdmiral(x.data));
+    tryParse(
+        proxy["api_get_member_basic"]).listen((x) => updateAdmiral(x.data));
     tryParse(proxy["api_req_member_updatecomment"]).listen(updateComment);
   }
   updateAdmiral(data) {

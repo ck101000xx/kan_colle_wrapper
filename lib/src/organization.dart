@@ -25,7 +25,8 @@ class Organization extends Observable {
     });
 
     tryParse(proxy["api_get_member_deck"]).listen((x) => updateFleets(x.data));
-    tryParse(proxy["api_get_member_deck_port"]).listen((x) => updateFleets(x.data));
+    tryParse(
+        proxy["api_get_member_deck_port"]).listen((x) => updateFleets(x.data));
 
     tryParse(proxy["api_req_hensei_change"]).listen(change);
     tryParse(proxy["api_req_hokyu_charge"]).listen((x) => charge(x.data));
@@ -34,26 +35,26 @@ class Organization extends Observable {
     tryParse(proxy["api_req_kousyou_destroyship"]).listen(destoryShip);
     tryParse(proxy["api_req_member_updatedeckname"]).listen(updateFleetName);
 
-    tryParse(proxy["api_req_hensei_combined"])
-      .listen((x) => combined = x.data["api_combined"] == 1);
+    tryParse(proxy["api_req_hensei_combined"]).listen((x) => combined =
+        x.data["api_combined"] == 1);
 
     bool flag = false;
     tryParse(proxy["api_req_map_start"])
         ..forEach(sortie)
         ..forEach((_) => flag = true);
-    proxy["api_port"]
-        ..forEach((_) {
-      if (flag == true) {
-        flag = false;
-        homing();
-      }
-    });
+    proxy["api_port"]..forEach((_) {
+          if (flag == true) {
+            flag = false;
+            homing();
+          }
+        });
   }
 
 
   Fleet getFleet(int shipId) {
-    return fleets.values.isEmpty ? null : fleets.values
-        .singleWhere((x) => x.ships.any((s) => s.id == shipId));
+    return fleets.values.isEmpty ?
+        null :
+        fleets.values.singleWhere((x) => x.ships.any((s) => s.id == shipId));
   }
 
 
@@ -101,8 +102,7 @@ class Organization extends Observable {
         return;
       }
       Fleet currentFleet = getFleet(ship.id);
-      if (currentFleet == null)
-      {
+      if (currentFleet == null) {
         // ship が、現状どの艦隊にも所属していないケース
         fleet.change(index, ship);
         return;
@@ -144,13 +144,11 @@ class Organization extends Observable {
         target.update(svd.data["api_ship"]);
       }
 
-      var items = svd.request["api_id_items"]
-        .split(",")
-        .where((String s) => s.isNotEmpty)
-        .map(int.parse)
-        .where((x) => ships.containsKey(x))
-        .select((x) => ships[x])
-        .ToList();
+      var items = svd.request["api_id_items"].split(
+          ",").where(
+              (String s) =>
+                  s.isNotEmpty).map(
+                      int.parse).where((x) => ships.containsKey(x)).select((x) => ships[x]).ToList();
 
       // (改修に使った艦娘のこと item って呼ぶのどうなの…)
 

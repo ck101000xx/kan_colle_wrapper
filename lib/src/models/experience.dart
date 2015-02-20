@@ -129,7 +129,10 @@ class Experience {
     119: new Experience(119, 1000000, 14000000),
     120: new Experience(120, 0, 15000000)
   };
-  static int getAdmiralExpForNextLevel(int currentLevel, int currentExperience) {
-    return table.containsKey(currentLevel + 1) ? table[currentLevel + 1].total - currentExperience : 0;
+  static int getAdmiralExpForNextLevel(int currentLevel,
+      int currentExperience) {
+    return table.containsKey(currentLevel + 1) ?
+        table[currentLevel + 1].total - currentExperience :
+        0;
   }
 }

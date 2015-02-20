@@ -44,9 +44,13 @@ class KanColleClient extends Observable {
     var sitem = tryParse(proxy["api_get_member_slot_item"]).first;
 
     return proxy["api_start2"].first.then((session) {
-      Future.wait([basic, kdock, sitem]).timeout(
-          new Duration(seconds: 20),
-          onTimeout: () => null).then((result) {
+      Future.wait(
+          [
+              basic,
+              kdock,
+              sitem]).timeout(
+                  new Duration(seconds: 20),
+                  onTimeout: () => null).then((result) {
         SvData.tryParse(session).then((svd) {
           if (svd == null) return;
           master = new Master(svd.data);

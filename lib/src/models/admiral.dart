@@ -6,7 +6,9 @@ class Admiral extends RawDataWrapper {
   @observable String comment;
   int get experience => rawData["api_experience"];
   int get experienceForNexeLevel =>
-      Experience.getAdmiralExpForNextLevel(rawData["api_level"], rawData["api_experience"]);
+      Experience.getAdmiralExpForNextLevel(
+          rawData["api_level"],
+          rawData["api_experience"]);
   int get level => rawData["api_level"];
   String get rank => Rank.getName(rawData["api_rank"]);
   int get sortieWins => rawData["api_st_win"];
@@ -23,6 +25,7 @@ class Admiral extends RawDataWrapper {
   }
   @override
   String toString() {
-    return "ID = ${memberId}, Nickname = \"${nickname}\", Level = ${level}, Rank = \"${rank}\"";
+    return
+        "ID = ${memberId}, Nickname = \"${nickname}\", Level = ${level}, Rank = \"${rank}\"";
   }
 }

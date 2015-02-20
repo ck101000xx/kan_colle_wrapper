@@ -26,7 +26,7 @@ class RepairingDock extends TimerNotifier implements IIdentifiable {
 
   @reflectable get completeTime => _completeTime;
   @reflectable set completeTime(value) {
-    if (_completeTime != value){
+    if (_completeTime != value) {
       _notificated = false;
       _completeTime = notifyPropertyChange(#completeTime, _completeTime, value);
     }
@@ -47,10 +47,12 @@ class RepairingDock extends TimerNotifier implements IIdentifiable {
     id = rawData["api_id"];
     state = rawData["api_state"];
     shipId = rawData["api_ship_id"];
-    ship = state == RepairingDockState.repairing ? _homeport.organization.ships[shipId] : null;
-    completeTime = state == RepairingDockState.repairing
-      ? new DateTime.fromMillisecondsSinceEpoch(rawData["api_complete_time"])
-      : null;
+    ship = state == RepairingDockState.repairing ?
+        _homeport.organization.ships[shipId] :
+        null;
+    completeTime = state == RepairingDockState.repairing ?
+        new DateTime.fromMillisecondsSinceEpoch(rawData["api_complete_time"]) :
+        null;
   }
 
   void finish() {
@@ -71,7 +73,9 @@ class RepairingDock extends TimerNotifier implements IIdentifiable {
       this.remaining = remaining;
       if (!_notificated &&
           completed != null &&
-          remaining <= new Duration(seconds: KanColleClient.current.settings.notificationShorteningTime)) {
+          remaining <=
+              new Duration(
+                  seconds: KanColleClient.current.settings.notificationShorteningTime)) {
         _completedController.add(new RepairingCompletedEventArgs(id, ship));
         _notificated = true;
       }

@@ -12,19 +12,23 @@ class Materials extends Observable {
   @reflectable get instantRepairMaterials => _instantRepairMaterials;
   @reflectable get bucket => _instantRepairMaterials;
   @reflectable set instantRepairMaterials(value) {
-    notifyPropertyChange(#instantRepairMaterials, _instantRepairMaterials, value);
-    _instantRepairMaterials = notifyPropertyChange(#Bucket, _instantRepairMaterials, value);
+    notifyPropertyChange(
+        #instantRepairMaterials,
+        _instantRepairMaterials,
+        value);
+    _instantRepairMaterials =
+        notifyPropertyChange(#Bucket, _instantRepairMaterials, value);
   }
 
   @observable int instantBuildMaterials;
 
   Materials(KanColleProxy proxy) {
-    tryParse(proxy["api_get_member_material"])
-      .listen((x) => update(x.data));
-    tryParse(proxy["api_req_hokyu_charge"])
-      .listen((x) => update(x.data["api_material"]));
-    tryParse(proxy["api_req_kousyou_destroyship"])
-      .listen((x) => update(x.data["api_material"]));
+    tryParse(proxy["api_get_member_material"]).listen((x) => update(x.data));
+    tryParse(
+        proxy["api_req_hokyu_charge"]).listen((x) => update(x.data["api_material"]));
+    tryParse(
+        proxy["api_req_kousyou_destroyship"]).listen(
+            (x) => update(x.data["api_material"]));
   }
 
 

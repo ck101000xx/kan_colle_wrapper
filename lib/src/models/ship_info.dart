@@ -1,5 +1,5 @@
 part of kan_colle_wrapper.models;
-_get0 (list, index) {
+_get0(list, index) {
   var result;
   result = get(list, index);
   if (result == null) return 0;
@@ -38,7 +38,8 @@ class ShipInfo extends RawDataWrapper implements IIdentifiable {
   ShipType get shipType {
     if (_shipType != null) return _shipType;
     if ((_shipType =
-        KanColleClient.current.master.shipTypes[rawData["api_stype"]]) != null) return _shipType;
+        KanColleClient.current.master.shipTypes[rawData["api_stype"]]) !=
+            null) return _shipType;
     return ShipType.dummy;
   }
 
